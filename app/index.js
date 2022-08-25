@@ -19,3 +19,20 @@ Company Details:
     }
 }
 getUsers()
+
+async function getPosts() {
+    let response = await fetch('https://jsonplaceholder.typicode.com/posts')
+    let data = await response.json()
+    for (var i = 0; i < data.length; i++) {
+        console.log(`
+Post:
+
+ID: ${data[i].id}
+Title: ${data[i].title}
+    
+${data[i].body}
+    
+    `);
+    }
+}
+getPosts()
