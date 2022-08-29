@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: mysql:8.0.28-oracle
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: users
+    ports:
+      - 5000:5000
+
+  adminer:
+    image: adminer:4.8.1
+    depends_on: [db]
+    restart: always
+    ports:
+      - 9081:9081
+
+  node:
+    image: node:18.1.0-alpine3.15
+    command: sh -c "npm install && npm run dev"
+    depends_on: [adminer]
+    working_dir: /app/src/
+    environment:
+      MYSQL_DATABASE: users
+      MYSQL_USER: root
+      MYSQL_PASSWORD: example
+      MYSQL_HOST: db
+    ports:
+      - 5002:5003
+    volumes:
+      - ./:/app
