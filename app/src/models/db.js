@@ -1,38 +1,57 @@
-var express = require('express');
-var app = express();
+const { Sequelize } = require('sequelize');
+const fs = require("fs");
+const path = require("path");
 
-app.get('/', function (req, res) {
-
-    var sql = require("mssql");
-
-    // config for your database
-    var config = {
-        user: 'user',
-        password: 'password',
-        server: 'localhost',
-        database: 'SchoolDB'
-    };
-
-    // connect to your database
-    sql.connect(config, function (err) {
-
-        if (err) console.log(err);
-
-        // create Request object
-        var request = new sql.Request();
-
-        // query to the database and get the records
-        request.query('select * from Student', function (err, recordset) {
-
-            if (err) console.log(err)
-
-            // send records as a response
-            res.send(recordset);
-
-        });
+let sequelize;
+if (process.env.NODE_ENV === 'test') {
+    sequelize = new Sequelize('sqlite::memory:', {
+        logging: false,
     });
+} else {
+    sequelize = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USER, process.env.MYSQL_PASSWORD, {
+        host: process.env.MYSQL_HOST,
+        dialect: 'mysql'
+    });
+}
+
+var db = {
+    models: {}
+};
+
+fs.readdirSync(__dirname)
+    .filter(file => {
+        return (file.indexOf(".") !== 0) && (file !== "db.js");
+    })
+    .forEach(file => {
+        var model = require(path.join(__dirname, file))(sequelize);
+        db.models[model.name] = model;
+    });
+
+// Process all model associations.
+Object.keys(db.models).forEach(function (modelName) {
+    if ("associate" in db.models[modelName]) {
+        db.models[modelName].associate(db.models);
+    }
 });
 
-var server = app.listen(5000, function () {
-    console.log('Server is running..');
-});
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
+const connect = async () => {
+    try {
+
+        await db.sequelize.authenticate();
+        if (process.env.NODE_ENV === 'test') {
+            await db.sequelize.sync({ force: true })
+        } else {
+            await db.sequelize.sync({ force: false })
+        }
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+}
+
+module.exports = {
+    db,
+    connect
+};
