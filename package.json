@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "stack-deploy": "docker stack deploy -c docker-stack.yaml node-app",
     "stack-remove": "docker stack rm node-app",
-    "dev": "nodemon ./src/index.js",
+    "dev": "nodemon ./app/src/index.js",
     "start": "node index.js"
   },
   "author": "",

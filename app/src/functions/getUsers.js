@@ -18,6 +18,22 @@ Company Details:
     Website: ${data[i].website}`);
     }
 }
+async function getAllUsers() {
+
+    let response = await fetch('https://jsonplaceholder.typicode.com/users')
+    let data = await response.json()
+    for (var i = 0; i < data.length; i++) {
+        user = [id, name, username]
+        var id = `${data[i].id}`
+        var name = data[i].name
+        var username = data[i].username
+
+        console.log(user)
+
+
+    }
+}
 module.exports = {
-    getUsers
+    getUsers,
+    getAllUsers
 }

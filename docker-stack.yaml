@@ -8,28 +8,28 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: users
+      MYSQL_DATABASE: Users
     ports:
-      - 5000:5000
+      - 3306:3306
 
   adminer:
     image: adminer:4.8.1
     depends_on: [db]
     restart: always
     ports:
-      - 9081:9081
+      - 8080:8080
 
   node:
     image: node:18.1.0-alpine3.15
-    command: sh -c "npm install && npm run dev"
+    command: sh -c "npm install && npm run dev "
     depends_on: [adminer]
     working_dir: /app/src/
     environment:
-      MYSQL_DATABASE: users
+      MYSQL_DATABASE: Users
       MYSQL_USER: root
       MYSQL_PASSWORD: example
       MYSQL_HOST: db
     ports:
-      - 5002:5003
+      - 3001:3000
     volumes:
       - ./:/app

@@ -1,16 +1,16 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    const User = sequelize.define('User', {
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            unique: true
-        },
+    const Users = sequelize.define('Users', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             allowNull: true
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true
         },
         username: {
             type: DataTypes.STRING,
@@ -31,5 +31,5 @@ module.exports = (sequelize) => {
     //     models.User.belongsTo(models.Region);
     //     models.User.hasMany(models.Accommodation);
     // }
-    return User;
+    return Users;
 };
