@@ -27,12 +27,8 @@ fs.readdirSync(__dirname)
         db.models[model.name] = model;
     });
 
-// Process all model associations.
-Object.keys(db.models).forEach(function (modelName) {
-    if ("associate" in db.models[modelName]) {
-        db.models[modelName].associate(db.models);
-    }
-});
+
+
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
