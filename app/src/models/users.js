@@ -27,9 +27,5 @@ module.exports = (sequelize) => {
     }, {
         tableName: 'Users'
     });
-    // User.associate = (models) => {
-    //     models.User.belongsTo(models.Region);
-    //     models.User.hasMany(models.Accommodation);
-    // }
     return Users;
 };
